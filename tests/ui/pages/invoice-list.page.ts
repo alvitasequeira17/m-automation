@@ -37,9 +37,9 @@ export class InvoiceListPage {
     }
 
     async isPageLoaded(): Promise<boolean> {
-            await this.pageHeading.waitFor({state: 'visible', timeout: DEFAULT_WAIT_TIMEOUT});
-            const headingText = await this.pageHeading.textContent();
-            return headingText?.trim() === PAGE_TITLE;
+        await this.pageHeading.waitFor({state: 'visible', timeout: DEFAULT_WAIT_TIMEOUT});
+        const headingText = await this.pageHeading.textContent();
+        return headingText?.trim() === PAGE_TITLE;
     }
 
     async hasInvoicesOrEmptyState(): Promise<boolean> {
@@ -103,8 +103,9 @@ export class InvoiceListPage {
                 return true;
             }
             if (await this.loadMoreButton.isVisible().catch(() => false)) {
-                await this.loadMoreButton.waitFor({ state: 'attached', timeout: pollInterval });
-                await this.loadMoreButton.click().catch(() => {});
+                await this.loadMoreButton.waitFor({state: 'attached', timeout: pollInterval});
+                await this.loadMoreButton.click().catch(() => {
+                });
             }
             await this.page.waitForTimeout(pollInterval);
         }

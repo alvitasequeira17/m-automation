@@ -2,73 +2,73 @@
  * Test data generators and utilities
  */
 
-import { CreateInvoiceRequest, InvoiceStatus } from './types';
+import {CreateInvoiceRequest, InvoiceStatus} from './types';
 
 /**
  * Generate a unique ID with timestamp to avoid collisions in shared environment
  */
 export function generateUniqueId(prefix: string = 'test'): string {
-  return `${prefix}-${Date.now()}`;
+    return `${prefix}-${Date.now()}`;
 }
 
 /**
  * Generate a future date (default 7 days from now)
  */
 export function getFutureDate(daysFromNow: number = 1): string {
-  const date = new Date();
-  date.setDate(date.getDate() + daysFromNow);
-  return date.toISOString();
+    const date = new Date();
+    date.setDate(date.getDate() + daysFromNow);
+    return date.toISOString();
 }
 
 /**
  * Generate a past date (for expired invoices)
  */
 export function getPastDate(daysAgo: number = 7): string {
-  const date = new Date();
-  date.setDate(date.getDate() - daysAgo);
-  return date.toISOString();
+    const date = new Date();
+    date.setDate(date.getDate() - daysAgo);
+    return date.toISOString();
 }
 
 /**
  * Generate a date in October, a given number of days ago from today
  */
 export function getPastDateInOctober(daysAgo: number = 7): string {
-  const date = new Date();
-  date.setDate(date.getDate() - daysAgo);
-  date.setMonth(9); // October (0-based index)
-  return date.toISOString();
+    const date = new Date();
+    date.setDate(date.getDate() - daysAgo);
+    date.setMonth(9); // October (0-based index)
+    return date.toISOString();
 }
 
 /**
  * Create a valid invoice payload
  */
 export function createInvoicePayload(
-  overrides: Partial<CreateInvoiceRequest> = {}
+    overrides: Partial<CreateInvoiceRequest> = {}
 ): CreateInvoiceRequest {
-  return {
-    id: generateUniqueId('inv'),
-    customer_id: generateUniqueId('cust'),
-    currency: 'USD',
-    amount_minor: 10000, // $100.00
-    due_date_iso: getFutureDate(),
-    ...overrides,
-  };
+    return {
+        id: generateUniqueId('inv'),
+        customer_id: generateUniqueId('cust'),
+        currency: 'USD',
+        amount_minor: 10000, // $100.00
+        due_date_iso: getFutureDate(),
+        ...overrides,
+    };
 }
 
 /**
  * Generate a payment amount that will succeed
  */
 export function getSuccessfulPaymentAmount(): number {
-  // $125.55 - ends in 5, should succeed
-  return 12555;
+    // $125.55 - ends in 5, should succeed
+    return 12555;
 }
 
 /**
  * Generate a payment amount that will fail
  */
 export function getFailingPaymentAmount(): number {
-  // $123.33 - ends in 3, should fail
-  return 12333;
+    // $123.33 - ends in 3, should fail
+    return 12333;
 }
 
 /**
@@ -77,11 +77,11 @@ export function getFailingPaymentAmount(): number {
  * @param currency - Currency code
  */
 export function formatAmount(amountMinor: number, currency: string = 'USD'): string {
-  const major = amountMinor / 100;
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-  }).format(major);
+    const major = amountMinor / 100;
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency,
+    }).format(major);
 }
 
 /**
@@ -98,40 +98,43 @@ export function formatAmount(amountMinor: number, currency: string = 'USD'): str
 export async function setupTestInvoices(
     apiClient: any,
     invoices: { status: InvoiceStatus; amount?: number }[] = [
-      { status: InvoiceStatus.Unpaid },
-      { status: InvoiceStatus.Paid },
-      { status: InvoiceStatus.Void }
+        {status: InvoiceStatus.Unpaid},
+        {status: InvoiceStatus.Paid},
+        {status: InvoiceStatus.Void}
     ]
 ) {
-  const result: Record<string, string> = {};
-  for (const invoice of invoices) {
-    let payload: CreateInvoiceRequest;
-    let key: string;
+    const result: Record<string, string> = {};
+    for (const invoice of invoices) {
+        let payload: CreateInvoiceRequest;
+        let key: string;
 
-    switch (invoice.status) {
-      case InvoiceStatus.Unpaid:
-        payload = createInvoicePayload({ status: InvoiceStatus.Unpaid, ...(invoice.amount !== undefined && { amount_minor: invoice.amount }) });
-        key = 'unpaidInvoiceId';
-        break;
-      case InvoiceStatus.Paid:
-        payload = createInvoicePayload({ amount_minor: invoice.amount !== undefined ? invoice.amount : 12555, status: InvoiceStatus.Unpaid });
-        key = 'paidInvoiceId';
-        break;
-      case InvoiceStatus.Void:
-        payload = createInvoicePayload({ status: InvoiceStatus.Void, ...(invoice.amount !== undefined && { amount_minor: invoice.amount }) });
-        key = 'voidInvoiceId';
-        break;
-      default:
-        continue;
+        switch (invoice.status) {
+            case InvoiceStatus.Unpaid:
+                payload = createInvoicePayload({status: InvoiceStatus.Unpaid, ...(invoice.amount !== undefined && {amount_minor: invoice.amount})});
+                key = 'unpaidInvoiceId';
+                break;
+            case InvoiceStatus.Paid:
+                payload = createInvoicePayload({
+                    amount_minor: invoice.amount !== undefined ? invoice.amount : 12555,
+                    status: InvoiceStatus.Unpaid
+                });
+                key = 'paidInvoiceId';
+                break;
+            case InvoiceStatus.Void:
+                payload = createInvoicePayload({status: InvoiceStatus.Void, ...(invoice.amount !== undefined && {amount_minor: invoice.amount})});
+                key = 'voidInvoiceId';
+                break;
+            default:
+                continue;
+        }
+        await apiClient.createInvoice(payload);
+        if (invoice.status === InvoiceStatus.Paid) {
+            const payment = await apiClient.createPayment(payload.id);
+            if (payment.status === 201 && payment.body.id) {
+                await apiClient.confirmPayment(payment.body.id);
+            }
+        }
+        result[key] = payload.id;
     }
-    await apiClient.createInvoice(payload);
-    if (invoice.status === InvoiceStatus.Paid) {
-      const payment = await apiClient.createPayment(payload.id);
-      if (payment.status === 201 && payment.body.id) {
-        await apiClient.confirmPayment(payment.body.id);
-      }
-    }
-    result[key] = payload.id;
-  }
-  return result;
+    return result;
 }
