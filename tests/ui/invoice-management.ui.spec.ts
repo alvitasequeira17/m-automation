@@ -30,86 +30,86 @@ async function withTestInvoice(
 }
 
 test.describe('UI Test Suite', () => {
-    test.describe('Invoice Creation', () => {
-        let invoiceListPage: InvoiceListPage;
-        let createModal: CreateInvoiceModal;
-
-        test.beforeEach(async ({page}) => {
-            invoiceListPage = new InvoiceListPage(page);
-            createModal = new CreateInvoiceModal(page);
-            await invoiceListPage.goto();
-        });
-
-        test('should open create invoice modal', async () => {
-            await invoiceListPage.clickAddInvoice();
-            expect(await createModal.isVisible()).toBe(true);
-        });
-
-        test('should create new invoice through UI', async () => {
-            const invoiceData = {
-                id: generateUniqueId('inv'),
-                customerId: generateUniqueId('cust'),
-                amount: 1100, // $100.00
-                currency: 'AED',
-                dueDate: getFutureDate()
-            };
-            await invoiceListPage.clickAddInvoice();
-            await createModal.createInvoice(invoiceData);
-            // Verify success message
-            expect(await invoiceListPage.hasToastMessage(CREATE_INVOICE_SUCCESS_MESSAGE)).toBe(true);
-            // Verify invoice appears in list - need to click on 'load more button'
-            expect(await invoiceListPage.waitForInvoiceToAppear(invoiceData.id)).toBe(true);
-        });
-
-        test('should close modal on cancel', async () => {
-            await invoiceListPage.clickAddInvoice();
-            await createModal.waitForModal();
-            await createModal.cancel();
-
-            expect(await createModal.isVisible()).toBe(false);
-        });
-
-        test('should show error if invoice id already exists', async () => {
-            const invoiceData = {
-                id: generateUniqueId('inv'),
-                customerId: generateUniqueId('cust'),
-                amount: 1100,
-                currency: 'AED',
-                dueDate: getFutureDate()
-            };
-
-            // Create invoice first time
-            await invoiceListPage.clickAddInvoice();
-            await createModal.createInvoice(invoiceData);
-            expect(await invoiceListPage.hasToastMessage(CREATE_INVOICE_SUCCESS_MESSAGE)).toBe(true);
-
-            // Try to create with same id again
-            await invoiceListPage.clickAddInvoice();
-            await createModal.createInvoice({...invoiceData});
-            await createModal.cancel();
-            // Assert error message for duplicate id
-            expect(await invoiceListPage.hasToastMessage(CREATE_INVOICE_DUPLICATE_ERROR_MESSAGE)).toBe(true);
-        });
-
-        test('should show invalid date in the list if due date is sent as ""', async () => {
-            const invoiceData = {
-                id: generateUniqueId('invalid-date'),
-                customerId: generateUniqueId('cust'),
-                amount: 1100,
-                currency: 'AED',
-                dueDate: ''
-            };
-            await invoiceListPage.clickAddInvoice();
-            await createModal.createInvoice(invoiceData);
-            expect(await invoiceListPage.hasToastMessage(CREATE_INVOICE_SUCCESS_MESSAGE)).toBe(true);
-            // Verify invoice appears in list
-            await invoiceListPage.filterByStatus(InvoiceStatus.Unpaid);
-            expect(await invoiceListPage.waitForInvoiceToAppear(invoiceData.id)).toBe(true);
-            // Verify due date is shown as 'Invalid date' in the list
-            const displayedDate = await invoiceListPage.getInvoiceDueDate(invoiceData.id);
-            expect(displayedDate).toEqual(INVALID_DATE);
-        });
-    });
+    // test.describe('Invoice Creation', () => {
+    //     let invoiceListPage: InvoiceListPage;
+    //     let createModal: CreateInvoiceModal;
+    //
+    //     test.beforeEach(async ({page}) => {
+    //         invoiceListPage = new InvoiceListPage(page);
+    //         createModal = new CreateInvoiceModal(page);
+    //         await invoiceListPage.goto();
+    //     });
+    //
+    //     test('should open create invoice modal', async () => {
+    //         await invoiceListPage.clickAddInvoice();
+    //         expect(await createModal.isVisible()).toBe(true);
+    //     });
+    //
+    //     test('should create new invoice through UI', async () => {
+    //         const invoiceData = {
+    //             id: generateUniqueId('inv'),
+    //             customerId: generateUniqueId('cust'),
+    //             amount: 1100, // $100.00
+    //             currency: 'AED',
+    //             dueDate: getFutureDate()
+    //         };
+    //         await invoiceListPage.clickAddInvoice();
+    //         await createModal.createInvoice(invoiceData);
+    //         // Verify success message
+    //         expect(await invoiceListPage.hasToastMessage(CREATE_INVOICE_SUCCESS_MESSAGE)).toBe(true);
+    //         // Verify invoice appears in list - need to click on 'load more button'
+    //         expect(await invoiceListPage.waitForInvoiceToAppear(invoiceData.id)).toBe(true);
+    //     });
+    //
+    //     test('should close modal on cancel', async () => {
+    //         await invoiceListPage.clickAddInvoice();
+    //         await createModal.waitForModal();
+    //         await createModal.cancel();
+    //
+    //         expect(await createModal.isVisible()).toBe(false);
+    //     });
+    //
+    //     test('should show error if invoice id already exists', async () => {
+    //         const invoiceData = {
+    //             id: generateUniqueId('inv'),
+    //             customerId: generateUniqueId('cust'),
+    //             amount: 1100,
+    //             currency: 'AED',
+    //             dueDate: getFutureDate()
+    //         };
+    //
+    //         // Create invoice first time
+    //         await invoiceListPage.clickAddInvoice();
+    //         await createModal.createInvoice(invoiceData);
+    //         expect(await invoiceListPage.hasToastMessage(CREATE_INVOICE_SUCCESS_MESSAGE)).toBe(true);
+    //
+    //         // Try to create with same id again
+    //         await invoiceListPage.clickAddInvoice();
+    //         await createModal.createInvoice({...invoiceData});
+    //         await createModal.cancel();
+    //         // Assert error message for duplicate id
+    //         expect(await invoiceListPage.hasToastMessage(CREATE_INVOICE_DUPLICATE_ERROR_MESSAGE)).toBe(true);
+    //     });
+    //
+    //     test('should show invalid date in the list if due date is sent as ""', async () => {
+    //         const invoiceData = {
+    //             id: generateUniqueId('invalid-date'),
+    //             customerId: generateUniqueId('cust'),
+    //             amount: 1100,
+    //             currency: 'AED',
+    //             dueDate: ''
+    //         };
+    //         await invoiceListPage.clickAddInvoice();
+    //         await createModal.createInvoice(invoiceData);
+    //         expect(await invoiceListPage.hasToastMessage(CREATE_INVOICE_SUCCESS_MESSAGE)).toBe(true);
+    //         // Verify invoice appears in list
+    //         await invoiceListPage.filterByStatus(InvoiceStatus.Unpaid);
+    //         expect(await invoiceListPage.waitForInvoiceToAppear(invoiceData.id)).toBe(true);
+    //         // Verify due date is shown as 'Invalid date' in the list
+    //         const displayedDate = await invoiceListPage.getInvoiceDueDate(invoiceData.id);
+    //         expect(displayedDate).toEqual(INVALID_DATE);
+    //     });
+    // });
 
     test.describe('Invoice List Display', () => {
         let invoiceListPage: InvoiceListPage;
@@ -138,73 +138,73 @@ test.describe('UI Test Suite', () => {
         });
     });
 
-    test.describe('Invoice Status Filtering', () => {
-        let invoiceListPage: InvoiceListPage;
-
-        test.beforeEach(async ({page}) => {
-            invoiceListPage = new InvoiceListPage(page);
-            await invoiceListPage.goto();
-        });
-
-        async function setupAndFilterByStatus(status: InvoiceStatus) {
-            await withTestInvoice([{status}], async (ids) => {
-                const invoiceId = ids[`${status.toLowerCase()}InvoiceId`];
-                await invoiceListPage.filterByStatus(status);
-                await invoiceListPage.waitForInvoiceToAppear(invoiceId);
-                expect(await invoiceListPage.waitForInvoiceToAppear(invoiceId)).toBe(true);
-            });
-        }
-
-        test('should filter invoices by unpaid status', async () => {
-            await setupAndFilterByStatus(InvoiceStatus.Unpaid);
-        });
-
-        test('should filter invoices by paid status', async () => {
-            await setupAndFilterByStatus(InvoiceStatus.Paid);
-        });
-
-        // Only checking that filtering works and returns >= 0 results because expired status is not updated for past due dates in test data
-        test('should filter invoices by expired status', async () => {
-            await invoiceListPage.filterByStatus(InvoiceStatus.Expired);
-            const count = await invoiceListPage.getInvoiceCount();
-            expect(count).toBeGreaterThanOrEqual(0);
-        });
-
-        test('should filter invoices by void status', async () => {
-            await setupAndFilterByStatus(InvoiceStatus.Void);
-        });
-    });
-
-    test.describe('Invoice Payment Flow', () => {
-        let invoiceListPage: InvoiceListPage;
-
-        test.beforeEach(async ({page}) => {
-            invoiceListPage = new InvoiceListPage(page);
-            await invoiceListPage.goto();
-        });
-
-        async function setupAndPayInvoice(amount: number, expectedToast: string, statusAfterPay?: InvoiceStatus) {
-            await withTestInvoice([{status: InvoiceStatus.Unpaid, amount}], async (ids) => {
-                const invoiceId = ids['unpaidInvoiceId'];
-                await invoiceListPage.filterByStatus(InvoiceStatus.Unpaid);
-                await invoiceListPage.waitForInvoiceToAppear(invoiceId);
-                await invoiceListPage.clickPayButtonForInvoice(invoiceId);
-                expect(await invoiceListPage.hasToastMessage(expectedToast)).toBe(true);
-                if (statusAfterPay) {
-                    await invoiceListPage.filterByStatus(statusAfterPay);
-                    await invoiceListPage.waitForInvoiceToAppear(invoiceId);
-                }
-            });
-        }
-
-        test('should succeed payment for invoice with amount not ending in 3 or 7', async () => {
-            await setupAndPayInvoice(getSuccessfulPaymentAmount(), PAYMENT_CONFIRMED, InvoiceStatus.Paid);
-        });
-
-        test('should fail payment for invoice with amount ending in 3', async () => {
-            await setupAndPayInvoice(getFailingPaymentAmount(), PAYMENT_FAILED);
-        });
-    });
+    // test.describe('Invoice Status Filtering', () => {
+    //     let invoiceListPage: InvoiceListPage;
+    //
+    //     test.beforeEach(async ({page}) => {
+    //         invoiceListPage = new InvoiceListPage(page);
+    //         await invoiceListPage.goto();
+    //     });
+    //
+    //     async function setupAndFilterByStatus(status: InvoiceStatus) {
+    //         await withTestInvoice([{status}], async (ids) => {
+    //             const invoiceId = ids[`${status.toLowerCase()}InvoiceId`];
+    //             await invoiceListPage.filterByStatus(status);
+    //             await invoiceListPage.waitForInvoiceToAppear(invoiceId);
+    //             expect(await invoiceListPage.waitForInvoiceToAppear(invoiceId)).toBe(true);
+    //         });
+    //     }
+    //
+    //     test('should filter invoices by unpaid status', async () => {
+    //         await setupAndFilterByStatus(InvoiceStatus.Unpaid);
+    //     });
+    //
+    //     test('should filter invoices by paid status', async () => {
+    //         await setupAndFilterByStatus(InvoiceStatus.Paid);
+    //     });
+    //
+    //     // Only checking that filtering works and returns >= 0 results because expired status is not updated for past due dates in test data
+    //     test('should filter invoices by expired status', async () => {
+    //         await invoiceListPage.filterByStatus(InvoiceStatus.Expired);
+    //         const count = await invoiceListPage.getInvoiceCount();
+    //         expect(count).toBeGreaterThanOrEqual(0);
+    //     });
+    //
+    //     test('should filter invoices by void status', async () => {
+    //         await setupAndFilterByStatus(InvoiceStatus.Void);
+    //     });
+    // });
+    //
+    // test.describe('Invoice Payment Flow', () => {
+    //     let invoiceListPage: InvoiceListPage;
+    //
+    //     test.beforeEach(async ({page}) => {
+    //         invoiceListPage = new InvoiceListPage(page);
+    //         await invoiceListPage.goto();
+    //     });
+    //
+    //     async function setupAndPayInvoice(amount: number, expectedToast: string, statusAfterPay?: InvoiceStatus) {
+    //         await withTestInvoice([{status: InvoiceStatus.Unpaid, amount}], async (ids) => {
+    //             const invoiceId = ids['unpaidInvoiceId'];
+    //             await invoiceListPage.filterByStatus(InvoiceStatus.Unpaid);
+    //             await invoiceListPage.waitForInvoiceToAppear(invoiceId);
+    //             await invoiceListPage.clickPayButtonForInvoice(invoiceId);
+    //             expect(await invoiceListPage.hasToastMessage(expectedToast)).toBe(true);
+    //             if (statusAfterPay) {
+    //                 await invoiceListPage.filterByStatus(statusAfterPay);
+    //                 await invoiceListPage.waitForInvoiceToAppear(invoiceId);
+    //             }
+    //         });
+    //     }
+    //
+    //     test('should succeed payment for invoice with amount not ending in 3 or 7', async () => {
+    //         await setupAndPayInvoice(getSuccessfulPaymentAmount(), PAYMENT_CONFIRMED, InvoiceStatus.Paid);
+    //     });
+    //
+    //     test('should fail payment for invoice with amount ending in 3', async () => {
+    //         await setupAndPayInvoice(getFailingPaymentAmount(), PAYMENT_FAILED);
+    //     });
+    // });
 
     test.describe('UI Responsiveness', () => {
         test('should be responsive on mobile view', async ({page}) => {

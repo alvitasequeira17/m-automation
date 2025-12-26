@@ -37,9 +37,14 @@
    ```bash
    npm run test:ui
    ```
-5. View the test report:
+5. View the HTML test report:
    ```bash
    npm run test:report
+   ```
+6. Generate and view the Allure report:
+   ```bash
+   npm run allure:generate
+   npm run allure:open
    ```
 
 ### Environment Variables
@@ -49,6 +54,10 @@
   export UI_BASE_URL=https://your-ui-url.com
   npm test
   ```
+
+### Notes
+- Allure and HTML reports are supported. For advanced reporting, use Allure.
+- Logs and allure reporting can be further improved as needed.
 
 ## GitHub Workflow
 - Automated tests are also executed via GitHub Actions workflow (`.github/workflows/tests.yml`).
@@ -62,9 +71,5 @@
 - Payment failures are determined by the last digit of the amount (3 or 7).
 - UI selectors are flexible to accommodate unknown implementation details.
 - **Expired status assumption:** Creating an invoice with a past due date did not result in an expired status during testing; auto-expiration may require additional system logic or time to take effect.
-
-## Improvements & Future Work
-- Logging can be added to provide better traceability and debugging during test execution.
-- Test reporting can be enhanced (e.g., integrating Allure or other advanced reporting tools) for richer insights and easier analysis.
 
 For full project details, see PROJECT_SUMMARY.md

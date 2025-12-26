@@ -8,11 +8,15 @@
     "test:api": "playwright test tests/api",
     "test:ui": "playwright test tests/ui",
     "test:report": "playwright show-report",
+    "allure:generate": "allure generate ./allure-results --clean -o ./allure-report",
+    "allure:open": "allure open ./allure-report",
     "build": "tsc"
   },
   "devDependencies": {
-    "@playwright/test": "^1.48.0",
+    "@playwright/test": "^1.57.0",
     "@types/node": "^22.19.3",
+    "allure-commandline": "^2.36.0",
+    "allure-playwright": "^3.4.3",
     "typescript": "^5.5.3"
   },
   "private": true
