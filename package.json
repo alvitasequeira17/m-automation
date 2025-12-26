@@ -1,0 +1,21 @@
+{
+  "name": "m-automation",
+  "version": "1.0.0",
+  "description": "Automated tests for Utility Bill Pay application",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:api": "playwright test tests/api",
+    "test:ui": "playwright test tests/ui",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^22.19.3",
+    "typescript": "^5.5.3"
+  },
+  "private": true
+}

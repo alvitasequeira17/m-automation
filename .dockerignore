@@ -1,0 +1,15 @@
+node_modules
+dist
+.git
+.gitignore
+.DS_Store
+.idea
+*.log
+test-results
+playwright-report
+playwright/.cache
+coverage
+.env
+.env.local
+README.md
+
