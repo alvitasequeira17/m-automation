@@ -2,16 +2,17 @@ import {expect, request as playwrightRequest, test} from '@playwright/test';
 import {InvoiceListPage} from './pages/invoice-list.page';
 import {CreateInvoiceModal} from './pages/create-invoice-modal.page';
 import {
-  generateUniqueId,
-  getFailingPaymentAmount,
-  getFutureDate,
-  getSuccessfulPaymentAmount,
-  setupTestInvoices
+    generateUniqueId,
+    getFailingPaymentAmount,
+    getFutureDate,
+    getSuccessfulPaymentAmount,
+    setupTestInvoices
 } from '../helpers/test-data';
 import {InvoiceStatus} from '../helpers/types';
 import {
     CREATE_INVOICE_DUPLICATE_ERROR_MESSAGE,
-    CREATE_INVOICE_SUCCESS_MESSAGE, INVALID_DATE,
+    CREATE_INVOICE_SUCCESS_MESSAGE,
+    INVALID_DATE,
     PAYMENT_CONFIRMED,
     PAYMENT_FAILED
 } from "./helpers/constants";
@@ -203,6 +204,16 @@ test.describe('UI Test Suite', () => {
 
         test('should fail payment for invoice with amount ending in 3', async () => {
             await setupAndPayInvoice(getFailingPaymentAmount(), PAYMENT_FAILED);
+        });
+
+        test('should have disabled pay button for void invoices', async () => {
+            await withTestInvoice([{status: InvoiceStatus.Void}], async (ids) => {
+                const invoiceId = ids['voidInvoiceId'];
+                await invoiceListPage.filterByStatus(InvoiceStatus.Void);
+                await invoiceListPage.waitForInvoiceToAppear(invoiceId);
+                // Check that the pay button is disabled for this invoice
+                expect(await invoiceListPage.isPayButtonDisabled(invoiceId)).toBe(true);
+            });
         });
     });
 

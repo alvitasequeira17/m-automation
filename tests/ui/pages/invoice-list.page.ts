@@ -122,4 +122,10 @@ export class InvoiceListPage {
         const dueDate = cells[2]?.trim() || null;
         return dueDate;
     }
+
+    async isPayButtonDisabled(invoiceId: string): Promise<boolean> {
+        const invoiceRow = this.page.locator(`[data-testid="invoice-row-${invoiceId}"]`);
+        const payButton = invoiceRow.locator('button', {hasText: /pay/i});
+        return await payButton.first().isDisabled();
+    }
 }
