@@ -24,13 +24,11 @@ import { Invoice, PaymentAttempt, ErrorResponse, InvoiceStatus } from '../helper
 //       amount_minor: getSuccessfulPaymentAmount()
 //     });
 //     await apiClient.createInvoice(invoiceData);
-//     console.log('invoice created:', invoiceData);
 //
 //     // Create payment attempt
 //     const { status: createStatus, body: paymentBody } = await apiClient.createPayment(
 //       invoiceData.id
 //     );
-//     console.log('payment body:', paymentBody);
 //     expect(createStatus).toBe(201);
 //     const payment = paymentBody as PaymentAttempt;
 //     expect(payment.status).toBe('pending');
@@ -40,14 +38,12 @@ import { Invoice, PaymentAttempt, ErrorResponse, InvoiceStatus } from '../helper
 //     const { status: confirmStatus, body: confirmedBody } = await apiClient.confirmPayment(
 //       payment.id
 //     );
-//     console.log('confirmed:', confirmedBody);
 //     expect(confirmStatus).toBe(200);
 //     const confirmedPayment = confirmedBody as PaymentAttempt;
 //     expect(confirmedPayment.status).toBe('confirmed');
 //
 //     // Verify invoice is now paid
 //     const invoice = await apiClient.getInvoice(invoiceData.id) as Invoice;
-//     console.log('invoice created:', invoice);
 //     expect(invoice.status).toBe(InvoiceStatus.Paid);
 //   });
 //
@@ -62,12 +58,10 @@ import { Invoice, PaymentAttempt, ErrorResponse, InvoiceStatus } from '../helper
 //     // Create and confirm payment
 //     const { body: paymentBody } = await apiClient.createPayment(invoiceData.id);
 //     const payment = paymentBody as PaymentAttempt;
-//     console.log(payment);
 //
 //     const { status: confirmStatus, body: confirmedBody } = await apiClient.confirmPayment(
 //       payment.id
 //     );
-//     console.log('confirmed:', confirmedBody);
 //
 //     // Payment should fail
 //     expect(confirmStatus).toBe(402);
@@ -77,7 +71,6 @@ import { Invoice, PaymentAttempt, ErrorResponse, InvoiceStatus } from '../helper
 //     // Verify invoice is still unpaid
 //     const invoice = await apiClient.getInvoice(invoiceData.id) as Invoice;
 //     expect(invoice.status).toBe(InvoiceStatus.Unpaid);
-//     console.log('invoice created:', invoice);
 //   });
 //
 //   test('should fail payment with amount ending in 7', async () => {
@@ -85,7 +78,6 @@ import { Invoice, PaymentAttempt, ErrorResponse, InvoiceStatus } from '../helper
 //     const invoiceData = createInvoicePayload({
 //       amount_minor: 12777// $127.77
 //     });
-//     console.log('invoice created:', invoiceData);
 //
 //     await apiClient.createInvoice(invoiceData);
 //
@@ -140,16 +132,13 @@ import { Invoice, PaymentAttempt, ErrorResponse, InvoiceStatus } from '../helper
 //
 //     const { body: paymentBody } = await apiClient.createPayment(invoiceData.id);
 //     const payment = paymentBody as PaymentAttempt;
-//     console.log(payment);
 //
 //     // Force success with mock header
 //     const { status, body } = await apiClient.confirmPayment(payment.id, 'success');
-//     console.log('payment created:', payment);
 //
 //     expect(status).toBe(200);
 //     const confirmedPayment = body as PaymentAttempt;
 //     expect(confirmedPayment.status).toBe('confirmed');
-//     console.log('confirmed:', confirmedPayment);
 //   });
 //
 //   test('should force failure with X-Mock-Outcome header', async () => {
@@ -161,7 +150,6 @@ import { Invoice, PaymentAttempt, ErrorResponse, InvoiceStatus } from '../helper
 //
 //     const { body: paymentBody } = await apiClient.createPayment(invoiceData.id);
 //     const payment = paymentBody as PaymentAttempt;
-//     console.log(payment);
 //
 //     // Force failure with mock header
 //     const { status } = await apiClient.confirmPayment(payment.id, 'fail');
@@ -207,11 +195,8 @@ import { Invoice, PaymentAttempt, ErrorResponse, InvoiceStatus } from '../helper
 //     // First payment - should succeed
 //     const { body: payment1 } = await apiClient.createPayment(invoiceData.id);
 //     await apiClient.confirmPayment((payment1 as PaymentAttempt).id);
-//     console.log(payment1);
 //     // Try to pay again
 //     const { status, body } = await apiClient.createPayment(invoiceData.id);
-//     console.log(status);
-//     console.log(body);
 //     expect(status).toBe(422);
 //     const error = body as ErrorResponse;
 //     expect(error.error).toBeTruthy();

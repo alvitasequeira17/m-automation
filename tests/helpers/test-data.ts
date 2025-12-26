@@ -132,7 +132,6 @@ export async function setupTestInvoices(
       }
     }
     result[key] = payload.id;
-    console.log(`${key}`, payload.id);
   }
   return result;
 }

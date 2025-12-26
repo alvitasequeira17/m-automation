@@ -16,7 +16,6 @@ import { Invoice, ErrorResponse, InvoiceStatus } from '../helpers/types';
 //
 //   test('should create invoice with valid data', async () => {
 //     const invoiceData = createInvoicePayload();
-//     console.log(invoiceData);
 //     const { status, body } = await apiClient.createInvoice(invoiceData);
 //
 //     expect(status).toBe(201);
@@ -30,7 +29,6 @@ import { Invoice, ErrorResponse, InvoiceStatus } from '../helpers/types';
 //
 //   test('should create invoice with void status', async () => {
 //     const invoiceData = createInvoicePayload({ status: InvoiceStatus.Void });
-//     console.log('Creating invoice with data:', invoiceData);
 //     const { status, body } = await apiClient.createInvoice(invoiceData);
 //
 //     expect(status).toBe(201);
@@ -43,20 +41,17 @@ import { Invoice, ErrorResponse, InvoiceStatus } from '../helpers/types';
 //
 //     const { body } = await apiClient.createInvoice(invoiceData);
 //     const invoice = body as Invoice;
-//     console.log(body)
 //     expect(invoice.status).toBe(InvoiceStatus.Unpaid);
 //   });
 //
 //   test('should reject invoice with duplicate ID', async () => {
 //     const invoiceData = createInvoicePayload();
-//     console.log('Creating invoice with data:', invoiceData);
 //
 //     // Create first invoice
 //     await apiClient.createInvoice(invoiceData);
 //
 //     // Try to create duplicate
 //     const { status, body } = await apiClient.createInvoice(invoiceData);
-//     console.log('Duplicate invoice response:', { status, body });
 //
 //     expect(status).toBe(409);
 //     const error = body as ErrorResponse;
@@ -68,7 +63,6 @@ import { Invoice, ErrorResponse, InvoiceStatus } from '../helpers/types';
 //     const invoiceData = createInvoicePayload({ currency: 'US' });
 //
 //     const { status, body } = await apiClient.createInvoice(invoiceData);
-//     console.log('response:', { status, body });
 //     expect(status).toBe(400);
 //     const error = body as ErrorResponse;
 //     expect(error.error).toBeTruthy();
@@ -78,7 +72,6 @@ import { Invoice, ErrorResponse, InvoiceStatus } from '../helpers/types';
 //     const invoiceData = createInvoicePayload({ amount_minor: -100 });
 //
 //     const { status, body } = await apiClient.createInvoice(invoiceData);
-//     console.log('response:', { status, body });
 //     expect(status).toBe(400);
 //     const error = body as ErrorResponse;
 //     expect(error.error).toBeTruthy();
@@ -88,7 +81,6 @@ import { Invoice, ErrorResponse, InvoiceStatus } from '../helpers/types';
 //     const invoiceData = createInvoicePayload({ id: 'ab' });
 //
 //     const { status, body } = await apiClient.createInvoice(invoiceData);
-//     console.log('response:', { status, body });
 //     expect(status).toBe(400);
 //     const error = body as ErrorResponse;
 //     expect(error.error).toBeTruthy();
@@ -96,7 +88,6 @@ import { Invoice, ErrorResponse, InvoiceStatus } from '../helpers/types';
 //
 //   test('should reject invoice with missing required fields', async () => {
 //     const { status, body } = await apiClient.createInvoice({} as any);
-//     console.log('response:', { status, body });
 //     expect(status).toBe(400);
 //     const error = body as ErrorResponse;
 //     expect(error.error).toBeTruthy();
@@ -113,12 +104,10 @@ import { Invoice, ErrorResponse, InvoiceStatus } from '../helpers/types';
 //   test('should fetch existing invoice by ID', async () => {
 //     // Create an invoice
 //     const invoiceData = createInvoicePayload();
-//     console.log('Creating invoice with data:', invoiceData);
 //     await apiClient.createInvoice(invoiceData);
 //
 //     // Retrieve it
 //     const invoice = await apiClient.getInvoice(invoiceData.id) as Invoice;
-//     console.log(invoice);
 //     expect(invoice.id).toBe(invoiceData.id);
 //     expect(invoice.customer_id).toBe(invoiceData.customer_id);
 //     expect(invoice.status).toBeTruthy();
@@ -126,12 +115,10 @@ import { Invoice, ErrorResponse, InvoiceStatus } from '../helpers/types';
 //
 //   test('should return 404 for incorrect invoice', async ({ request }) => {
 //     const response = await request.get('/invoices/incorrect-id-12345');
-//     console.log('response status:', response.status());
 //
 //     expect(response.status()).toBe(404);
 //     const error = await response.json() as ErrorResponse;
 //     expect(error.error).toBeTruthy();
-//     console.log('error response:', error.error.code);
 //   });
 //
 //   test('should fetch list of invoices', async () => {
@@ -143,7 +130,6 @@ import { Invoice, ErrorResponse, InvoiceStatus } from '../helpers/types';
 //
 //     // List invoices
 //     const response = await apiClient.listInvoices();
-//     console.log(response);
 //     expect(response.items).toBeInstanceOf(Array);
 //     expect(response.items.length).toBeGreaterThan(0);
 //     expect(response.items[0]).toHaveProperty('id');
@@ -160,18 +146,15 @@ import { Invoice, ErrorResponse, InvoiceStatus } from '../helpers/types';
 //
 //     // Filter by unpaid status
 //     const unpaidResponse = await apiClient.listInvoices(InvoiceStatus.Unpaid);
-//     console.log('Unpaid invoices:', unpaidResponse);
 //     expect(unpaidResponse.items.every(inv => inv.status === InvoiceStatus.Unpaid)).toBe(true);
 //
 //     // Filter by void status
 //     const voidResponse = await apiClient.listInvoices(InvoiceStatus.Void);
-//     console.log('Unpaid invoices:', voidResponse);
 //     expect(voidResponse.items.every(inv => inv.status === InvoiceStatus.Void)).toBe(true);
 //   });
 //
 //   test('should match limit parameter', async () => {
 //     const response = await apiClient.listInvoices(undefined, 2);
-//     console.log('Response:', response);
 //     expect(response.items.length).toBeLessThanOrEqual(2);
 //   });
 // });

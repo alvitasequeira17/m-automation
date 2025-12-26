@@ -29,7 +29,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         baseURL: process.env.UI_BASE_URL || 'https://ui-t6vbon.bunnyenv.com',
         ignoreHTTPSErrors: true,
-        channel: 'chrome', // Use system Chrome to avoid download issues
+        channel: 'chromium',
       },
     },
   ],
