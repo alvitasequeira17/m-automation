@@ -8,4 +8,5 @@ export const ADD_INVOICE_BUTTON = 'Add Invoice';
 export const LOAD_MORE_BUTTON = 'Load more';
 export const PAYMENT_CONFIRMED = 'Payment confirmed';
 export const PAYMENT_FAILED = 'Payment failed (mock)';
+export const INVALID_DATE = 'Invalid Date'
 

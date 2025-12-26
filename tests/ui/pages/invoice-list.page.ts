@@ -111,4 +111,15 @@ export class InvoiceListPage {
         }
         return await this.page.locator(selector).count() > 0;
     }
+
+    async getInvoiceDueDate(invoiceId: string): Promise<string | null> {
+        // Find the row by data-testid
+        const invoiceRow = this.page.locator(`[data-testid="invoice-row-${invoiceId}"]`);
+        const row = (await invoiceRow.count()) > 0
+            ? invoiceRow
+            : this.page.locator(`tr[data-invoice-id="${invoiceId}"]`);
+        const cells = await row.locator('td').allTextContents();
+        const dueDate = cells[2]?.trim() || null;
+        return dueDate;
+    }
 }

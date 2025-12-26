@@ -21,25 +21,6 @@ export function getFutureDate(daysFromNow: number = 1): string {
 }
 
 /**
- * Generate a past date (for expired invoices)
- */
-export function getPastDate(daysAgo: number = 7): string {
-    const date = new Date();
-    date.setDate(date.getDate() - daysAgo);
-    return date.toISOString();
-}
-
-/**
- * Generate a date in October, a given number of days ago from today
- */
-export function getPastDateInOctober(daysAgo: number = 7): string {
-    const date = new Date();
-    date.setDate(date.getDate() - daysAgo);
-    date.setMonth(9); // October (0-based index)
-    return date.toISOString();
-}
-
-/**
  * Create a valid invoice payload
  */
 export function createInvoicePayload(
@@ -48,7 +29,7 @@ export function createInvoicePayload(
     return {
         id: generateUniqueId('inv'),
         customer_id: generateUniqueId('cust'),
-        currency: 'USD',
+        currency: 'AED',
         amount_minor: 10000, // $100.00
         due_date_iso: getFutureDate(),
         ...overrides,
@@ -69,19 +50,6 @@ export function getSuccessfulPaymentAmount(): number {
 export function getFailingPaymentAmount(): number {
     // $123.33 - ends in 3, should fail
     return 12333;
-}
-
-/**
- * Format amount from minor units to display string
- * @param amountMinor - Amount in minor units (cents)
- * @param currency - Currency code
- */
-export function formatAmount(amountMinor: number, currency: string = 'USD'): string {
-    const major = amountMinor / 100;
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency,
-    }).format(major);
 }
 
 /**

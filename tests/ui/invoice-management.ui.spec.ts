@@ -10,10 +10,10 @@ import {
 } from '../helpers/test-data';
 import {InvoiceStatus} from '../helpers/types';
 import {
-  CREATE_INVOICE_DUPLICATE_ERROR_MESSAGE,
-  CREATE_INVOICE_SUCCESS_MESSAGE,
-  PAYMENT_CONFIRMED,
-  PAYMENT_FAILED
+    CREATE_INVOICE_DUPLICATE_ERROR_MESSAGE,
+    CREATE_INVOICE_SUCCESS_MESSAGE, INVALID_DATE,
+    PAYMENT_CONFIRMED,
+    PAYMENT_FAILED
 } from "./helpers/constants";
 import {ApiClient} from '../helpers/api-client';
 
@@ -47,7 +47,7 @@ test.describe('UI Test Suite', () => {
 
         test('should create new invoice through UI', async () => {
             const invoiceData = {
-                id: generateUniqueId('in'),
+                id: generateUniqueId('inv'),
                 customerId: generateUniqueId('cust'),
                 amount: 1100, // $100.00
                 currency: 'AED',
@@ -71,7 +71,7 @@ test.describe('UI Test Suite', () => {
 
         test('should show error if invoice id already exists', async () => {
             const invoiceData = {
-                id: generateUniqueId('in'),
+                id: generateUniqueId('inv'),
                 customerId: generateUniqueId('cust'),
                 amount: 1100,
                 currency: 'AED',
@@ -89,6 +89,25 @@ test.describe('UI Test Suite', () => {
             await createModal.cancel();
             // Assert error message for duplicate id
             expect(await invoiceListPage.hasToastMessage(CREATE_INVOICE_DUPLICATE_ERROR_MESSAGE)).toBe(true);
+        });
+
+        test('should show invalid date in the list if due date is sent as ""', async () => {
+            const invoiceData = {
+                id: generateUniqueId('invalid-date'),
+                customerId: generateUniqueId('cust'),
+                amount: 1100,
+                currency: 'AED',
+                dueDate: ''
+            };
+            await invoiceListPage.clickAddInvoice();
+            await createModal.createInvoice(invoiceData);
+            expect(await invoiceListPage.hasToastMessage(CREATE_INVOICE_SUCCESS_MESSAGE)).toBe(true);
+            // Verify invoice appears in list
+            await invoiceListPage.filterByStatus(InvoiceStatus.Unpaid);
+            expect(await invoiceListPage.waitForInvoiceToAppear(invoiceData.id)).toBe(true);
+            // Verify due date is shown as 'Invalid date' in the list
+            const displayedDate = await invoiceListPage.getInvoiceDueDate(invoiceData.id);
+            expect(displayedDate).toEqual(INVALID_DATE);
         });
     });
 
