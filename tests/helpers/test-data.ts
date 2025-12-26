@@ -12,7 +12,7 @@ export function generateUniqueId(prefix: string = 'test'): string {
 }
 
 /**
- * Generate a future date (default 7 days from now)
+ * Generate a future date
  */
 export function getFutureDate(daysFromNow: number = 1): string {
     const date = new Date();

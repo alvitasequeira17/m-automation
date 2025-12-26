@@ -8,10 +8,6 @@ This file contains the full project overview, test strategy, coverage, design de
 - Project Structure
 - Prerequisites
 - Installation & Execution
-- Test Coverage
-- Design Decisions
-- Assumptions
-- Known Limitations
 
 ## Overview
 Comprehensive automated testing suite for the Utility Bill Pay application, covering both API and UI testing using Playwright and TypeScript.
@@ -66,15 +62,3 @@ m-automation/
 - API: `npm run test:api`
 - UI: `npm run test:ui`
 - Report: `npm run test:report`
-
-## Test Coverage
-- API: Invoice creation, payment, status transitions, error handling, filtering, pagination, idempotency, health check
-- UI: Invoice list, creation, payment, status filtering, responsive design, error states
-
-## Design Decisions
-- Playwright for unified API/UI testing
-- TypeScript for type safety
-- Page Object Model for UI abstraction
-- Unique test data for shared environment
-- Deterministic payment logic
-- Flexible UI selectors

@@ -63,4 +63,8 @@
 - UI selectors are flexible to accommodate unknown implementation details.
 - **Expired status assumption:** Creating an invoice with a past due date did not result in an expired status during testing; auto-expiration may require additional system logic or time to take effect.
 
+## Improvements & Future Work
+- Logging can be added to provide better traceability and debugging during test execution.
+- Test reporting can be enhanced (e.g., integrating Allure or other advanced reporting tools) for richer insights and easier analysis.
+
 For full project details, see PROJECT_SUMMARY.md
