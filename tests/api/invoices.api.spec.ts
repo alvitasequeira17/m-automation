@@ -7,7 +7,7 @@ import {ErrorResponse, Invoice, InvoiceStatus} from '../helpers/types';
  * Invoice Management API Tests
  */
 
-test.describe('Invoice API - Creation', () => {
+test.describe('Invoice API', () => {
     let apiClient: ApiClient;
 
     test.beforeEach(async ({request}) => {

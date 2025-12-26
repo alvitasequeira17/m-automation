@@ -7,7 +7,7 @@ import {ErrorResponse, Invoice, InvoiceStatus, PaymentAttempt} from '../helpers/
  * Payment Processing API Tests
  */
 
-test.describe('Payment API - Success Flow', () => {
+test.describe('Payment API', () => {
     let apiClient: ApiClient;
 
     test.beforeEach(async ({request}) => {
