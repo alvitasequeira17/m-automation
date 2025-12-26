@@ -21,6 +21,8 @@ COPY tests/ ./tests/
 # Install Playwright browsers (already in base image, but ensure they're available)
 RUN npx playwright install --with-deps
 
+RUN npx playwright install chrome
+
 # Set environment variables for test execution
 ENV CI=true
 ENV NODE_ENV=test

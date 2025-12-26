@@ -30,7 +30,6 @@ export default defineConfig({
         baseURL: process.env.UI_BASE_URL || 'https://ui-t6vbon.bunnyenv.com',
         ignoreHTTPSErrors: true,
         channel: 'chrome', // Use system Chrome to avoid download issues
-        headless: false,
       },
     },
   ],
